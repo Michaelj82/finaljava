@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import Privateroute from "./Privateroute";
-export default function Dashboard(){
+import { receiveData } from "./firebase";
+export default function Dashboard(props){
 
     const [error, setError] = useState('')
     const {currentUser, logout} = useAuth()
+    const [info, setInfo] = useState()
     const navigate = useNavigate()
+
     async function handleLogout(){
         setError('')
+        console.log(currentUser)
         try{
             await logout()
             navigate('/login')
@@ -18,6 +21,16 @@ export default function Dashboard(){
         }
     }
 
+    useEffect(() => {
+        try{
+            let snapshot = receiveData(currentUser.email)
+            setInfo(snapshot)
+            console.log(snapshot)
+        }catch(error){
+            console.log(error)
+        }
+    }, [currentUser])
+
     return(
         <div>
             <Card>
@@ -25,6 +38,8 @@ export default function Dashboard(){
                 <h2 className="text-center mb-4">Profile</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <div><strong>Email: </strong>{currentUser.email}</div>
+                <div><strong>User ID: </strong>{currentUser.uid}</div>
+
                 <Link to={'/update-profile'} className='btn btn-primary w-100 mt-3'>Update Profile</Link>
                 </Card.Body>
             </Card>

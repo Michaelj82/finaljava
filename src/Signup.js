@@ -4,15 +4,23 @@ import {Form, Button, Card, Alert} from 'react-bootstrap'
 import { useAuth } from "./contexts/AuthContext";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { createUser } from "./firebase";
 export default function Signup(){
 
     const emailRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
-    const { signup } = useAuth()
+    const { signup, currentUser } = useAuth()
     const [error, setError] = useState('')
     const [loading, setLoading]= useState(false)
     const navigate = useNavigate()
+
+    function turnEmailToReadable(email){
+        let newEmail = email.replace('@', 'at')
+        newEmail = newEmail.replace('.', 'dot')
+        return newEmail
+
+    }
 
     async function handleSubmit(event){
         event.preventDefault()
@@ -23,10 +31,13 @@ export default function Signup(){
 
 
         try{
+            let readable = turnEmailToReadable(emailRef.current.value)
+            console.log(readable)
             setError('')
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
             navigate('/')
+            createUser('bob', 'joeman', emailRef.current.value, readable)
 
         }catch(error){
             setError('Failed to create an account')
