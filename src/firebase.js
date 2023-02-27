@@ -24,10 +24,16 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const auth = getAuth(app)
 
-function turnEmailToReadable(email){
+
+export function turnEmailToReadable(email){
   let newEmail = email.replace('@', 'at')
   newEmail = newEmail.replace('.', 'dot')
   return newEmail
+
+}
+
+export function updateData(){
+  //search for email then change stuff
 
 }
 
@@ -42,7 +48,8 @@ export function createUser(firstName, lastName, email, id, accountInfo){
     firstName: firstName,
     lastName: lastName,
     email, email,
-    accountInfo: accountInfo
+    accountInfo: accountInfo,
+    id: id,
   })
 }
 
@@ -52,6 +59,11 @@ export function receiveData(email, callback){
   let value = 'none'
 
   const dbRef = ref(getDatabase(app))
+
+  //change this to search for email within a file
+  //then select that file
+
+
 
   get(child(dbRef, `users/${readable}`)).then((snapshot) => {
     if (snapshot.val()['email'] === email){

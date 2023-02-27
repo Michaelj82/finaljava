@@ -33,6 +33,7 @@ export default function Signup(){
 
 
         try{
+            //chagne this to uniqid, just need this for now while edit firebase funcs
             let readable = turnEmailToReadable(emailRef.current.value)
             console.log(readable)
             setError('')
@@ -40,7 +41,6 @@ export default function Signup(){
             await signup(emailRef.current.value, passwordRef.current.value)
             navigate('/')
             createUser(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, readable, {'profilePic':'', 'posts':'', 'mood': ''})
-
         }catch(error){
             setError('Failed to create an account')
             console.log(error)

@@ -41,6 +41,7 @@ export default function Updateprofile(){
         Promise.all(promises)
         .then(() => {
             navigate('/')
+            //update function for firebase database
         }).catch(()=>{
             setError('Failed to update account')
         }).finally(() => {
