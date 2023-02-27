@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import { receiveData } from "./firebase";
+import {receiveData} from "./firebase";
 export default function Dashboard(props){
 
     const [error, setError] = useState('')
     const {currentUser, logout} = useAuth()
-    const [info, setInfo] = useState()
+    const [info, setInfo] = useState({
+    })
     const navigate = useNavigate()
 
     async function handleLogout(){
@@ -23,19 +24,18 @@ export default function Dashboard(props){
 
     useEffect(() => {
         try{
-            let snapshot = receiveData(currentUser.email)
-            setInfo(snapshot)
-            console.log(snapshot)
+            let snapshot = receiveData(currentUser.email, setInfo)
         }catch(error){
             console.log(error)
         }
-    }, [currentUser])
+    }, [])
 
     return(
         <div>
             <Card>
                 <Card.Body>
-                <h2 className="text-center mb-4">Profile</h2>
+                <h2 className="text-center mb-4">Hello {info && info.firstName} {info && info.lastName}
+                </h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <div><strong>Email: </strong>{currentUser.email}</div>
                 <div><strong>User ID: </strong>{currentUser.uid}</div>

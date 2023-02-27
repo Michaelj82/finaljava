@@ -9,6 +9,8 @@ export default function Signup(){
 
     const emailRef = useRef()
     const passwordRef = useRef()
+    const firstNameRef = useRef()
+    const lastNameRef = useRef()
     const passwordConfirmRef = useRef()
     const { signup, currentUser } = useAuth()
     const [error, setError] = useState('')
@@ -37,7 +39,7 @@ export default function Signup(){
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
             navigate('/')
-            createUser('bob', 'joeman', emailRef.current.value, readable)
+            createUser(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, readable, {'profilePic':'', 'posts':'', 'mood': ''})
 
         }catch(error){
             setError('Failed to create an account')
@@ -53,6 +55,22 @@ export default function Signup(){
             <h2>Sign Up</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
+                <Form.Group id="firstName">
+                    <Form.Label>
+                        First Name
+                    </Form.Label>
+                    <Form.Control type="text" ref={firstNameRef} required></Form.Control>
+
+                </Form.Group>
+                <Form.Group id="lastName">
+                    <Form.Label>
+                        Last Name
+                    </Form.Label>
+                    <Form.Control type="lastName" ref={lastNameRef} required></Form.Control>
+
+                </Form.Group>
+
+
                 <Form.Group id="email">
                     <Form.Label>
                         Email

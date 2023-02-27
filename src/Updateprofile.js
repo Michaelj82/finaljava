@@ -8,6 +8,8 @@ export default function Updateprofile(){
 
     const emailRef = useRef()
     const passwordRef = useRef()
+    const firstNameRef = useRef()
+    const lastNameRef = useRef()
     const passwordConfirmRef = useRef()
     const { currentUser, changeEmail, changePassword } = useAuth()
     const [error, setError] = useState('')
@@ -20,6 +22,9 @@ export default function Updateprofile(){
         if (passwordRef.current.value !== passwordConfirmRef.current.value){
             return setError('Passwords do not match')
         }
+
+        //need to make it so that it updates the
+        //email and name of file in  database.
 
         const promises = []
         setLoading(true)
@@ -51,6 +56,22 @@ export default function Updateprofile(){
             <h2>Update Profile</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
+
+                <Form.Group id="firstName">
+                    <Form.Label>
+                        First Name
+                    </Form.Label>
+                    <Form.Control type="text" ref={firstNameRef} required></Form.Control>
+
+                </Form.Group>
+                <Form.Group id="lastName">
+                    <Form.Label>
+                        Last Name
+                    </Form.Label>
+                    <Form.Control type="lastName" ref={lastNameRef} required></Form.Control>
+
+                </Form.Group>
+
                 <Form.Group id="email">
                     <Form.Label>
                         Email
