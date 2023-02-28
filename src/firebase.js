@@ -1,9 +1,9 @@
 
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { DataSnapshot, getDatabase, orderByChild, setValue, onValue} from 'firebase/database'
-import {where, query, collection} from 'firebase/firestore'
-import {ref, push, set, get, child} from 'firebase/database'
+import { DataSnapshot, getDatabase, setValue, onValue, forEach} from 'firebase/database';
+import {where, query, collection} from 'firebase/firestore';
+import {ref, set, get, child, once, orderByChild} from 'firebase/database';
 import {
 getAuth,
 connectAuthEmulator,
@@ -54,24 +54,19 @@ export function createUser(firstName, lastName, email, id, accountInfo){
 }
 
 export function receiveData(email, callback){
-  // const database = getDatabase(app);
+  const database = getDatabase(app);
   let readable = turnEmailToReadable(email)
   let value = 'none'
 
-  const dbRef = ref(getDatabase(app))
-
-  //change this to search for email within a file
-  //then select that file
-
-
-
-  get(child(dbRef, `users/${readable}`)).then((snapshot) => {
-    if (snapshot.val()['email'] === email){
-      value = snapshot.val()
-      callback(value)
-    }
-  }).catch((error) => {
-    console.log(error)
+  const dbRef = ref(database)
+  get(child(dbRef, '/users/')).then((snapshot) => {
+    snapshot.forEach(function(child){
+      let info = child.val()
+      if (info['email'] == email){
+        console.log(child.val()['email'])
+        callback(info)
+      }
+    })
   })
 
 }
