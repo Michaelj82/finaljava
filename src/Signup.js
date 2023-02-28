@@ -17,12 +17,6 @@ export default function Signup(){
     const [loading, setLoading]= useState(false)
     const navigate = useNavigate()
 
-    function turnEmailToReadable(email){
-        let newEmail = email.replace('@', 'at')
-        newEmail = newEmail.replace('.', 'dot')
-        return newEmail
-
-    }
 
     async function handleSubmit(event){
         event.preventDefault()
@@ -34,13 +28,12 @@ export default function Signup(){
 
         try{
             //chagne this to uniqid, just need this for now while edit firebase funcs
-            let readable = turnEmailToReadable(emailRef.current.value)
-            console.log(readable)
+
             setError('')
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
             navigate('/')
-            createUser(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, readable, {'profilePic':'', 'posts':'', 'mood': ''})
+            createUser(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, {'profilePic':'', 'posts':'', 'mood': ''})
         }catch(error){
             setError('Failed to create an account')
             console.log(error)

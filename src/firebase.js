@@ -2,8 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { DataSnapshot, getDatabase, setValue, onValue, forEach} from 'firebase/database';
-import {where, query, collection} from 'firebase/firestore';
-import {ref, set, get, child, once, orderByChild} from 'firebase/database';
+import {where, query, updateDoc, doc, setDoc, collection, getFirestore} from 'firebase/firestore';
+import {ref, set, get, child, once, orderByChild, push, } from 'firebase/database';
 import {
 getAuth,
 connectAuthEmulator,
@@ -32,31 +32,49 @@ export function turnEmailToReadable(email){
 
 }
 
-export function updateData(){
+export async function  updateData(firstName, lastName, email, originalEmail){
   //search for email then change stuff
+  const database = getDatabase(app);
+
+  const dbRef = ref(database)
+  get(child(dbRef, '/users/')).then((snapshot) => {
+    snapshot.forEach(function(child){
+      let key = child.key
+      let info = child.val()
+      if (info['email'] == originalEmail){
+        set(ref(database, `users/` + key), {
+          accountInfo: info['accountInfo'],
+          email: `${email}`,
+          firstName: firstName,
+          lastName: lastName
+        }).then(()=>{
+
+        }).catch((error)=>{
+          console.log(error)
+        })
+      }
+    })
+  })
 
 }
 
 
-export function createUser(firstName, lastName, email, id, accountInfo){
+export function createUser(firstName, lastName, email, accountInfo){
   const database = getDatabase(app);
 
-  const postListRef = ref(database, `/users/${id}`)
+  const postListRef = ref(database, `/users/`)
 
 
-  set(postListRef, {
+  push(postListRef, {
     firstName: firstName,
     lastName: lastName,
     email, email,
     accountInfo: accountInfo,
-    id: id,
   })
 }
 
 export function receiveData(email, callback){
   const database = getDatabase(app);
-  let readable = turnEmailToReadable(email)
-  let value = 'none'
 
   const dbRef = ref(database)
   get(child(dbRef, '/users/')).then((snapshot) => {

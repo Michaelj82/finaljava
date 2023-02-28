@@ -3,7 +3,7 @@ import { useRef } from "react";
 import {Form, Button, Card, Alert} from 'react-bootstrap'
 import { useAuth } from "./contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-
+import { updateData } from "./firebase";
 export default function Updateprofile(){
 
     const emailRef = useRef()
@@ -17,6 +17,7 @@ export default function Updateprofile(){
     const navigate = useNavigate()
 
     function handleSubmit(event){
+        let originalEmail = currentUser.email
         event.preventDefault()
 
         if (passwordRef.current.value !== passwordConfirmRef.current.value){
@@ -41,7 +42,7 @@ export default function Updateprofile(){
         Promise.all(promises)
         .then(() => {
             navigate('/')
-            //update function for firebase database
+            updateData(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, originalEmail)
         }).catch(()=>{
             setError('Failed to update account')
         }).finally(() => {
