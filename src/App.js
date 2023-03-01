@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Signup from "./Signup";
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -9,8 +9,19 @@ import Login from "./Login";
 import Privateroute from "./Privateroute";
 import Forgotpassword from './Forgotpassword'
 import Updateprofile from "./Updateprofile";
+import { getKey } from "./firebase";
+import { useAuth } from "./contexts/AuthContext";
 function App() {
+  const [datakey, setDatakey] = ''
+  const { currentUser} = useAuth()
 
+  function useDataKey(input){
+    setDatakey(input)
+  }
+
+  useEffect(() => {
+    getKey(useDataKey, currentUser.email)
+  }, [])
 
   return(
 
@@ -27,6 +38,11 @@ function App() {
             <Route path='/login' element={<Login></Login>}></Route>
             <Route path="/forgot-password" element={<Forgotpassword></Forgotpassword>}></Route>
             <Route exact path="/update-profile" element={<Privateroute element={<Updateprofile></Updateprofile>}></Privateroute>}></Route>
+            
+            
+            
+            
+            {/* <Route path= {`profile/${}`} element={<Forgotpassword></Forgotpassword>}></Route> */}
 
           </Routes>
         </AuthProvider>

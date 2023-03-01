@@ -26,23 +26,28 @@ export default function Updateprofile(){
 
         //need to make it so that it updates the
         //email and name of file in  database.
+        console.log('promises')
 
         const promises = []
         setLoading(true)
         setError('')
-        if (emailRef.current.value !== currentUser.email){
-            promises.push(changeEmail(emailRef.current.value))
-        }
+        // if (emailRef.current.value !== currentUser.email){
+        //     promises.push(changeEmail(emailRef.current.value))
+        // }
 
         if (passwordRef.current.value){
             promises.push(changePassword(passwordRef.current.value))
 
         }
-
+        console.log('about to do update')
         Promise.all(promises)
         .then(() => {
-            navigate('/')
-            updateData(firstNameRef.current.value, lastNameRef.current.value, emailRef.current.value, originalEmail)
+            try{
+                updateData(firstNameRef.current.value, lastNameRef.current.value, originalEmail)
+                navigate('/')
+            }catch(error){
+                console.log(error)
+            }
         }).catch(()=>{
             setError('Failed to update account')
         }).finally(() => {
@@ -74,13 +79,13 @@ export default function Updateprofile(){
 
                 </Form.Group>
 
-                <Form.Group id="email">
+                {/* <Form.Group id="email">
                     <Form.Label>
                         Email
                     </Form.Label>
                     <Form.Control type="email" ref={emailRef}  defaultValue={currentUser.email}></Form.Control>
 
-                </Form.Group>
+                </Form.Group> */}
 
                 <Form.Group id="password">
                     <Form.Label>

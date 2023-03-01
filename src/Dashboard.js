@@ -24,7 +24,8 @@ export default function Dashboard(props){
 
     useEffect(() => {
         try{
-            let snapshot = receiveData(currentUser.email, setInfo)
+            receiveData(currentUser.email, setInfo)
+            navigate('/')
         }catch(error){
             console.log(error)
         }

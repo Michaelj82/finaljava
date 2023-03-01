@@ -31,9 +31,7 @@ export function turnEmailToReadable(email){
   return newEmail
 
 }
-
-export async function  updateData(firstName, lastName, email, originalEmail){
-  //search for email then change stuff
+export function getKey(callback, originalEmail){
   const database = getDatabase(app);
 
   const dbRef = ref(database)
@@ -42,11 +40,29 @@ export async function  updateData(firstName, lastName, email, originalEmail){
       let key = child.key
       let info = child.val()
       if (info['email'] == originalEmail){
+        callback(key)
+
+      }
+    })
+  })
+
+}
+export async function  updateData(firstName, lastName, originalEmail){
+
+  const database = getDatabase(app);
+
+  const dbRef = ref(database)
+  get(child(dbRef, '/users/')).then((snapshot) => {
+    snapshot.forEach(function(child){
+      let key = child.key
+      let info = child.val()
+      if (info['email'] == originalEmail){
+        console.log('hi')
         set(ref(database, `users/` + key), {
           accountInfo: info['accountInfo'],
-          email: `${email}`,
+          email: originalEmail,
           firstName: firstName,
-          lastName: lastName
+          lastName: lastName,
         }).then(()=>{
 
         }).catch((error)=>{
